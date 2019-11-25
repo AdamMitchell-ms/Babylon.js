@@ -55,10 +55,63 @@ interface XRInputSource {
     profiles: Array<string>;
 }
 
+//interface XRPoint {
+//    x: number;
+//    y: number;
+//    z: number;
+//}
+//
+//interface XRPlane {
+//    planeSpace: XRSpace;
+//    polygon: Array<XRPoint>;
+//}
+//
+////TODO: I made up this type name
+//interface XRPlaneDetectionState {
+//    enabled: boolean;
+//}
+//
+////TODO: I made up this type name
+//interface XRWorldTrackingState {
+//    planeDetectionState : XRPlaneDetectionState;
+//}
+//
+////TODO: I made up this type name
+//interface XRWorldInformation {
+//    detectedPlanes: Array<XRPlane>;
+//}
+
+// https://github.com/immersive-web/hit-test/blob/master/hit-testing-explainer.md#appendix-a-proposed-partial-idl
+interface XRHitTestSource {
+    cancel(): void;
+}
+
+type XRHitTestTrackableType =
+    | "plane"
+    | "point";
+
+interface XRRay {
+    origin: DOMPointReadOnly;
+    direction: DOMPointReadOnly;
+    matrix: Float32Array;
+}
+
+interface XRHitTestOptionsInit {
+    space: XRSpace;
+    entityTypes?: Array<XRHitTestEntitXRHitTestTrackableTypeyType>;
+    offsetRay?: XRRay
+}
+
+interface XRHitTestResult {
+    getPose(baseSpace: XRSpace): XRPose | undefined;
+}
+
 interface XRSession {
     addEventListener: Function;
-    requestReferenceSpace(type: XRReferenceSpaceType): Promise<XRReferenceSpace>;
+    requestReferenceSpace(type: XRReferenceSpaceType): Promise<XRReferenceSpace> | undefined;
     updateRenderState(XRRenderStateInit: XRRenderState): Promise<void>;
+    //updateWorldTrackingState(trackingState: XRWorldTrackingState): void;
+    requestHitTestSource(options: XRHitTestOptionsInit): Promise<XRHitTestSource>;
     requestAnimationFrame: Function;
     end(): Promise<void>;
     renderState: XRRenderState;
@@ -75,6 +128,8 @@ interface XRFrame {
     session: XRSession;
     getViewerPose(referenceSpace: XRReferenceSpace): XRViewerPose | undefined;
     getPose(space: XRSpace, baseSpace: XRSpace): XRPose | undefined;
+    getHitTestResults(hitTestSource: XRHitTestSource): Array<XRHitTestResult> | undefined;
+    //worldInformation: XRWorldInformation;
 }
 
 interface XRViewerPose extends XRPose {

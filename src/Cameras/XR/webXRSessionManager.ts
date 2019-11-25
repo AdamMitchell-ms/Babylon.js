@@ -132,6 +132,10 @@ export class WebXRSessionManager implements IDisposable {
         });
     }
 
+    //public setPlaneDetection(enabled: boolean) {
+    //    this.session.updateWorldTrackingState({planeDetectionState: { enabled: enabled}});
+    //}
+
     /**
      * Updates the render state of the session
      * @param state state to set
